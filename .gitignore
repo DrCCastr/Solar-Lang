@@ -1,0 +1,8 @@
+# Build files
+build/
+
+# Executables
+*.exe
+
+# Just to remember
+cmd.md
