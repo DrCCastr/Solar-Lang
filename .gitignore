@@ -4,5 +4,6 @@ build/
 # Executables
 *.exe
 
-# Just to remember
+# Automations
+*.a.sh
 cmd.md
