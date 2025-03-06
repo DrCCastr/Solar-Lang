@@ -1,9 +1,11 @@
 # Build files
 build/
 
+# VS Code
+.vscode/
+
 # Executables
 *.exe
 
 # Automations
-*.a.sh
 cmd.md
