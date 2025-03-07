@@ -30,5 +30,9 @@ std::unique_ptr<RuntimeValue> evaluateNode(std::unique_ptr<Stmt> astNode) {
                 )
             );
         }
+
+        default: {
+            throw SolarError::RuntimeError("Unexpected", "Unknown node: " + astNode->toString());
+        }
     }
 }

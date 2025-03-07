@@ -32,7 +32,7 @@ bool Parser::notEOF() const {
 
 std::unique_ptr<Program> Parser::produceAST(std::vector<Token> tokens) {
     this->tokens = tokens;
-    auto program = std::make_unique<Program>(NodePos{0, 0, 0, 0});
+    auto program = std::make_unique<Program>(NodePos(0, 0, 0, 0));
 
     while (this->notEOF()) {
         program->body.push_back(this->parseStmt());
@@ -55,7 +55,7 @@ std::unique_ptr<Expr> Parser::parseAddtiveExpr() {
     while (this->notEOF() && (this->actual().content == "+" || this->actual().content == "-")) {
         std::string op = this->next().content;
         auto right = this->parseMultiplicativeExpr();
-        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right), NodePos().combineNP(left->position, right->position));
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right), NodePos::combineNP(left->position, right->position));
     }
 
     return left;
@@ -67,7 +67,7 @@ std::unique_ptr<Expr> Parser::parseMultiplicativeExpr() {
     while (this->notEOF() && (this->actual().content == "*" || this->actual().content == "/" || this->actual().content == "%")) {
         std::string op = this->next().content;
         auto right = this->parsePrimaryExpr();
-        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right), NodePos().combineNP(left->position, right->position));
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right), NodePos::combineNP(left->position, right->position));
     }
 
     return left;
@@ -78,7 +78,7 @@ std::unique_ptr<Expr> Parser::parsePrimaryExpr() {
 
     TokenEnum tkType = this->actual().type;
     TokenPos tkPos = this->actual().pos;
-    NodePos ndPos = NodePos{tkPos.line, tkPos.start, tkPos.end, tkPos.line};
+    NodePos ndPos = NodePos(tkPos.line, tkPos.start, tkPos.end, tkPos.line);
 
     switch (tkType) {
         case TokenEnum::Ident: return std::make_unique<Identifier>(this->next().content, ndPos); break;

@@ -15,23 +15,28 @@ enum class NodeType {
 
     BinaryExpr
 };
-
 struct NodePos {
     size_t line;
     size_t start;
     size_t end;
     size_t endLine;
 
+    NodePos(size_t l = 0, size_t s = 0, size_t e = 0, size_t el = 0)
+        : line(l), start(s), end(e), endLine(el) {}
+
     static NodePos combineTP(const TokenPos& start, const TokenPos& end) {
-        return {start.line, start.start, end.end, end.line};
+        return NodePos(start.line, start.start, end.end, end.line);
     }
 
     static NodePos combineNP(const NodePos& start, const NodePos& end) {
-        return {start.line, start.start, end.end, end.endLine};
+        return NodePos(start.line, start.start, end.end, end.endLine);
     }
 
     std::string toString() const {
-        return std::to_string(line) + "-" + std::to_string(start) + ":" + std::to_string(end) + "--" + std::to_string(endLine);
+        if (line == endLine) {
+            return "L" + std::to_string(line) + ":(" + std::to_string(start) + "-" + std::to_string(end) + ")";
+        }
+        return "L" + std::to_string(line) + ":" + std::to_string(start) + " until L" + std::to_string(endLine) + ":" + std::to_string(end);
     }
 };
 
@@ -49,7 +54,7 @@ protected:
 
 class Program : public Stmt {
 public:
-    Program(const NodePos& position = NodePos{0, 0, 0, 0}) {
+    Program(const NodePos& position = NodePos(0, 0, 0, 0)) {
         this->position = position;
     }
 

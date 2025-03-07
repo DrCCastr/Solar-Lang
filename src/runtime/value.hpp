@@ -10,12 +10,15 @@ class RuntimeValue {
 public:
     virtual ~RuntimeValue() = default;
     virtual ValueType getType() const = 0;
+    virtual std::string getTypeString() const = 0;
     virtual std::string toString() const = 0;
 };
 
 class NullValue : public RuntimeValue {
 public:
     ValueType getType() const override { return ValueType::Null; }
+
+    std::string getTypeString() const override { return "Null"; }
     std::string toString() const override { return "Null"; }
 };
 
@@ -24,6 +27,7 @@ public:
     NumberValue(double value) : value(value) {}
 
     ValueType getType() const override { return ValueType::Number; }
+    std::string getTypeString() const override { return "Number"; }
     std::string toString() const override { return "Number: " + std::to_string(value); }
 
     double value;

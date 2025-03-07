@@ -4,6 +4,7 @@
 #include "value.hpp"
 #include "evaluate/stmt.hpp"
 #include "evaluate/expr.hpp"
+#include "runtime_error.hpp"
 #include <cmath>
 #include <memory>
 
