@@ -1,5 +1,15 @@
+/***
+ * @file expr.cpp
+ * @brief Runtime evaluation of expressions.
+ */
+
 #include "expr.hpp"
 
+/***
+ * @brief Evaluate a binary expression
+ * @param binop The binary expression to evaluate ( std::unique_ptr<BinaryExpr> )
+ * @return The result of the binary operation
+ */
 std::unique_ptr<RuntimeValue> evaluateBinop(std::unique_ptr<BinaryExpr> binop) {
     NodePos leftPos = binop->left->position;
     NodePos rightPos = binop->right->position;

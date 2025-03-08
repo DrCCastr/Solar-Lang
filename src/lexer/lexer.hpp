@@ -1,3 +1,8 @@
+/***
+ * @file lexer.hpp
+ * @brief Includes all the lexer classes.
+ */
+
 #pragma once
 
 #include "tokens.hpp"

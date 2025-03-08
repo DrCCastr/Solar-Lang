@@ -1,3 +1,8 @@
+/***
+ * @file tokens.cpp
+ * @brief Implements the Token stuct.
+ */
+
 #include "tokens.hpp"
 
 std::string TokenEnumString(const TokenEnum& tokenEnum) {

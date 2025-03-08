@@ -1,3 +1,8 @@
+/***
+ * @file main.cpp
+ * @brief Main file of the project
+ */
+
 #include "ast/ast.hpp"
 #include "runtime/runner.hpp"
 #include "lexer/tokenizer.hpp"

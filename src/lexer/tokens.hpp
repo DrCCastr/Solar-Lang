@@ -1,3 +1,8 @@
+/***
+ * @file tokens.hpp
+ * @brief Defines the Token struct.
+ */
+
 #pragma once
 
 #include <iostream>
@@ -23,6 +28,11 @@ enum class TokenEnum {
     FE
 };
 
+/**
+ * @brief Converts a TokenEnum to a string.
+ * @param tokenEnum The TokenEnum to convert.
+ * @return std::string The string representation of the TokenEnum.
+ */
 std::string TokenEnumString(const TokenEnum& tokenEnum);
 
 struct TokenPos {

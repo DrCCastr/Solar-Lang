@@ -1,11 +1,26 @@
+/***
+ * @file parser.cpp
+ * @brief Implements the Parser class.
+ */
+
 #include "parser.hpp"
 
+/***
+ * @brief Consumes the actual token.
+ * @return Consumed token.
+ */
 Token Parser::next() {
     Token tk = this->tokens.at(0);
     this->tokens.erase(this->tokens.begin());
     return tk;
 }
 
+/***
+ * @brief Expects a token and returns it if it is the expected one.
+ * @param expected The expected token.
+ * @param err The error message to display if the token is not the expected one.
+ * @return The expected token.
+ */
 Token Parser::expect(TokenEnum expected, std::string err) {
     Token tk = this->next();
 
@@ -22,14 +37,27 @@ Token Parser::expect(TokenEnum expected, std::string err) {
     return tk;
 }
 
+/***
+ * @brief Returns the actual token.
+ * @return The actual token.
+ */
 const Token& Parser::actual() {
     return this->tokens.at(0);
 }
 
+/***
+ * @brief Checks if the token list is not empty.
+ * @return True if the token list is not empty, false otherwise.
+ */
 bool Parser::notEOF() const {
     return !this->tokens.empty() && this->tokens.at(0).type != TokenEnum::FE;
 }
 
+/***
+ * @brief Parses a list of tokens and returns the AST.
+ * @param tokens The list of tokens to parse.
+ * @return The AST.
+ */
 std::unique_ptr<Program> Parser::produceAST(std::vector<Token> tokens) {
     this->tokens = tokens;
     auto program = std::make_unique<Program>(NodePos(0, 0, 0, 0));
@@ -41,14 +69,26 @@ std::unique_ptr<Program> Parser::produceAST(std::vector<Token> tokens) {
     return program;
 }
 
+/***
+ * @brief Parses a statement and returns it.
+ * @return The statement.
+ */
 std::unique_ptr<Stmt> Parser::parseStmt() {
     return this->parseExpr();
 }
 
+/***
+ * @brief Parses an expression and returns it.
+ * @return The expression.
+ */
 std::unique_ptr<Expr> Parser::parseExpr() {
     return this->parseAddtiveExpr();
 }
 
+/***
+ * @brief Parses an additive expression and returns it.
+ * @return The additive expression.
+ */
 std::unique_ptr<Expr> Parser::parseAddtiveExpr() {
     auto left = this->parseMultiplicativeExpr();
 
@@ -61,6 +101,10 @@ std::unique_ptr<Expr> Parser::parseAddtiveExpr() {
     return left;
 }
 
+/***
+ * @brief Parses a multiplicative expression and returns it.
+ * @return The multiplicative expression.
+ */
 std::unique_ptr<Expr> Parser::parseMultiplicativeExpr() {
     auto left = this->parsePrimaryExpr();
 
@@ -73,6 +117,10 @@ std::unique_ptr<Expr> Parser::parseMultiplicativeExpr() {
     return left;
 }
 
+/***
+ * @brief Parses a primary expression and returns it.
+ * @return The primary expression.
+ */
 std::unique_ptr<Expr> Parser::parsePrimaryExpr() {
     if (this->tokens.empty()) return nullptr;
 

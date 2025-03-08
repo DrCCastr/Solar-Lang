@@ -1,3 +1,8 @@
+/***
+ * @file tokenizer.hpp
+ * @brief Declares the Tokenizer.
+ */
+
 #pragma once
 
 #include "tokens.hpp"

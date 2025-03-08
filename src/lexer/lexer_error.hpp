@@ -1,7 +1,16 @@
+/***
+ * @file lexer_error.hpp
+ * @brief Defines the Lexer error classes.
+ */
+
 #pragma once
 
 #include "error_base.hpp"
 
+/***
+ * @namespace SolarError
+ * @brief Implements Lexer errors to namespace.
+ */
 namespace SolarError {
     class LexerError : public BaseError {
     public:

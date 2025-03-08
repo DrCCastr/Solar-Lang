@@ -1,7 +1,16 @@
+/***
+ * @file ast_error.hpp
+ * @brief Defines the AST error classes.
+ */
+
 #pragma once
 
 #include "error_base.hpp"
 
+/***
+ * @namespace SolarError
+ * @brief Implements Ast errors to namespace.
+ */
 namespace SolarError {
     class AstError : public BaseError {
     public:

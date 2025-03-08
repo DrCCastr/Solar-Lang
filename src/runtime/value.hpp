@@ -1,3 +1,8 @@
+/***
+ * @file value.hpp
+ * @brief Defines the rutime values.
+ */
+
 #pragma once
 #include <string>
 
@@ -6,14 +11,26 @@ enum class ValueType {
     Number
 };
 
+/***
+ * @class RuntimeValue
+ * @brief Represents a runtime value.
+ */
 class RuntimeValue {
 public:
     virtual ~RuntimeValue() = default;
+
+    /*** * @brief Get the type of the value. */
     virtual ValueType getType() const = 0;
+    /*** * @brief Get the string representation of the type. */
     virtual std::string getTypeString() const = 0;
+    /*** * @brief Get the string representation of the value. */
     virtual std::string toString() const = 0;
 };
 
+/***
+ * @class NullValue
+ * @brief Represents a null value.
+ */
 class NullValue : public RuntimeValue {
 public:
     ValueType getType() const override { return ValueType::Null; }
@@ -22,6 +39,10 @@ public:
     std::string toString() const override { return "Null"; }
 };
 
+/***
+ * @class NumberValue
+ * @property value The value of the number ( double ).
+ */
 class NumberValue : public RuntimeValue {
 public:
     NumberValue(double value) : value(value) {}

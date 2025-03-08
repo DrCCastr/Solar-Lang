@@ -1,3 +1,8 @@
+/***
+ * @file tokenizer.cpp
+ * @brief Implements the Tokenizer.
+ */
+
 #include "tokenizer.hpp"
 
 static const std::vector<std::pair<std::string, TokenEnum>> keywords = {
@@ -5,6 +10,11 @@ static const std::vector<std::pair<std::string, TokenEnum>> keywords = {
     {"Null", TokenEnum::Null}
 };
 
+/***
+ * @brief Checks if a word is a keyword.
+ * @param word The word to check ( const std::string& ).
+ * @return The token type of the keyword / identifier.
+ */
 TokenEnum isKeyword(const std::string& word) {
     for (const auto& keyword : keywords) {
         if (word == keyword.first) {
@@ -14,14 +24,31 @@ TokenEnum isKeyword(const std::string& word) {
     return TokenEnum::Ident;
 }
 
+/***
+ * @brief Pushes a token to the token list.
+ * @param tokenList The token list ( std::vector<Token>& ).
+ * @param type The token type ( TokenEnum ).
+ * @param content The token content ( const std::string& ).
+ * @param pos The token position ( TokenPos ).
+ */
 void lexerPush(std::vector<Token>& tokenList, TokenEnum type, const std::string& content, TokenPos pos) {
     tokenList.emplace_back(type, content, pos);
 }
 
+/***
+ * @brief Checks if a character is valid.
+ * @param chr The character to check ( char ).
+ * @return True if the character is valid, false otherwise.
+ */
 bool validChar(char chr) {
     return (chr == '\t' || chr == ' ' || std::isdigit(chr) || std::isalpha(chr) || chr == '_' || chr == ';');
 }
 
+/***
+ * @brief Parses a source code string and returns a list of tokens.
+ * @param source The source code string ( const std::string& ).
+ * @return The list of tokens ( std::vector<Token> ).
+ */
 std::vector<Token> lexerParse(const std::string& source) {
     std::vector<Token> tokens;
     
@@ -89,6 +116,7 @@ std::vector<Token> lexerParse(const std::string& source) {
         }
     }
 
+    // EOF ( End of File ) Token
     lexerPush(tokens, TokenEnum::FE, "", {0, 0, 0});
     return tokens;
 }

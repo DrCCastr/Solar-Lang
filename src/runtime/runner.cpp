@@ -1,5 +1,15 @@
+/***
+ * @file runner.cpp
+ * @brief Implementation of runtime interpreter.
+ */
+
 #include "runner.hpp"
 
+/***
+ * @brief Evaluate a program
+ * @param program The program to evaluate ( std::unique_ptr<Stmt> )
+ * @return The result of the program
+ */
 std::unique_ptr<RuntimeValue> evaluateNode(std::unique_ptr<Stmt> astNode) {
     switch (astNode->getKind()) {
         case NodeType::Program: {

@@ -1,3 +1,8 @@
+/***
+ * @file ast.hpp
+ * @brief Includes all the AST classes.
+ */
+
 #pragma once
 
 #include "nodes.hpp"
