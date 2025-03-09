@@ -5,6 +5,7 @@
 
 #pragma once
 #include <string>
+#include <variant>
 
 enum class ValueType {
     Null,
@@ -53,3 +54,7 @@ public:
 
     double value;
 };
+
+// Define a variant type for runtime values.
+// Example: RuntimeValueV function() { if (condition) return NullValue(); else return NumberValue(42); }
+typedef std::variant<NullValue, NumberValue> RuntimeValueV;

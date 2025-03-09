@@ -25,7 +25,7 @@ Token Parser::expect(TokenEnum expected, std::string err) {
     Token tk = this->next();
 
     if (tk.type != expected) {
-        throw SolarError::SyntaxError(
+        throw Error::SyntaxError(
             "Expected: " + 
             TokenEnumString(expected) + 
             "at " + tk.pos.toString() +  
@@ -143,7 +143,7 @@ std::unique_ptr<Expr> Parser::parsePrimaryExpr() {
         }
 
         default:
-            throw SolarError::SyntaxError(
+            throw Error::SyntaxError(
                 "Unexpected token while parsing at: " + 
                 this->actual().pos.toString() + 
                 ", Token: " + this->actual().content

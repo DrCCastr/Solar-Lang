@@ -8,29 +8,37 @@
 /***
  * @brief Evaluate a binary expression
  * @param binop The binary expression to evaluate ( std::unique_ptr<BinaryExpr> )
+ * @param env The environment ( Env& )
  * @return The result of the binary operation
  */
-std::unique_ptr<RuntimeValue> evaluateBinop(std::unique_ptr<BinaryExpr> binop) {
+RuntimeValueV evaluateBinop(std::unique_ptr<BinaryExpr> binop, Env& env) {
     NodePos leftPos = binop->left->position;
     NodePos rightPos = binop->right->position;
 
-    auto leftResult = evaluateNode(std::move(binop->left));
-    auto rightResult = evaluateNode(std::move(binop->right));
+    auto leftResult = evaluateNode(std::move(binop->left), env);
+    auto rightResult = evaluateNode(std::move(binop->right), env);
 
-    if (leftResult->getType() != ValueType::Number
-    || rightResult->getType() != ValueType::Number) {
-        throw SolarError::RuntimeTypeError(
-        "Type " +
-        leftResult->getTypeString() +
-        " and " +
-        rightResult->getTypeString() +
-        " at: " + NodePos::combineNP(leftPos, rightPos).toString() +
-        " are not supported for binary operations, add a method to the type to support this operation."
+    bool isLeftNumber = std::visit([](auto&& arg) { 
+        return std::is_same_v<std::decay_t<decltype(arg)>, NumberValue>; 
+    }, leftResult);
+
+    bool isRightNumber = std::visit([](auto&& arg) {
+        return std::is_same_v<std::decay_t<decltype(arg)>, NumberValue>; 
+    }, rightResult);
+
+    if (!isLeftNumber || !isRightNumber) {
+        std::string leftType = std::visit([](auto&& arg) { return arg.getTypeString(); }, leftResult);
+        std::string rightType = std::visit([](auto&& arg) { return arg.getTypeString(); }, rightResult);
+        
+        throw Error::RuntimeTypeError(
+            "Type " + leftType + " and " + rightType +
+            " at: " + NodePos::combineNP(leftPos, rightPos).toString() +
+            " are not supported for binary operations"
         );
     }
 
-    double left = static_cast<NumberValue*>(leftResult.get())->value;
-    double right = static_cast<NumberValue*>(rightResult.get())->value;
+    double left = std::get<NumberValue>(leftResult).value;
+    double right = std::get<NumberValue>(rightResult).value;
 
     double result;
     switch (binop->op[0]) {
@@ -40,5 +48,5 @@ std::unique_ptr<RuntimeValue> evaluateBinop(std::unique_ptr<BinaryExpr> binop) {
         case '%': result = std::fmod(left, right); break;
     }
 
-    return std::make_unique<NumberValue>(result);
+    return NumberValue(result);
 }

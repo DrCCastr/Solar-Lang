@@ -9,10 +9,10 @@
 #include <string>
 
 /***
- * @namespace SolarError
+ * @namespace Error
  * @brief Namespace for Solar error handling
  */
-namespace SolarError {
+namespace Error {
     class BaseError : public std::runtime_error {
     protected:
         explicit BaseError(const std::string& type, const std::string& message) 

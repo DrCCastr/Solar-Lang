@@ -22,7 +22,7 @@ enum class TokenEnum {
     LParam,
     RParam,
 
-    BinaryOp, 
+    BinaryOp,
     Equals,
 
     FE

@@ -77,7 +77,7 @@ std::vector<Token> lexerParse(const std::string& source) {
 
             default:
                 if (!validChar(current)) {
-                    throw SolarError::IlegalCharacter(
+                    throw Error::IlegalCharacter(
                         "Illegal character '" +
                         std::string(1, current) + 
                         "' at " + std::to_string(line) + 

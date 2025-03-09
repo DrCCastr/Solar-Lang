@@ -6,16 +6,18 @@
 #include "stmt.hpp"
 
 /***
- * @brief Evaluate a statement
- * @param stmt The statement to evaluate ( std::unique_ptr<Stmt> )
- * @return The result of the statement
+ * @brief Evaluate a program
+ * @param program The statement to evaluate ( std::unique_ptr<Stmt> )
+ * @param env The environment ( Env& )
+ * @return The result of the program
  */
-std::unique_ptr<RuntimeValue> evaluateProgram(std::unique_ptr<Program> program) {
-    std::unique_ptr<RuntimeValue> lastEvaluated = std::make_unique<NullValue>();
 
-    for (size_t i = 0; i < program->body.size(); i++) {
-        lastEvaluated = evaluateNode(std::move(program->body[i]));
-    }
+RuntimeValueV evaluateProgram(std::unique_ptr<Program> program, Env& env) {
+  RuntimeValueV lastEvaluated = NullValue();
 
-    return lastEvaluated;
+  for (size_t i = 0; i < program->body.size(); i++) {
+    lastEvaluated = evaluateNode(std::move(program->body[i]), env);
+  }
+
+  return lastEvaluated;
 }

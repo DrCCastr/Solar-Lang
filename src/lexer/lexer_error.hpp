@@ -8,10 +8,10 @@
 #include "error_base.hpp"
 
 /***
- * @namespace SolarError
+ * @namespace Error
  * @brief Implements Lexer errors to namespace.
  */
-namespace SolarError {
+namespace Error {
     class LexerError : public BaseError {
     public:
         explicit LexerError(const std::string& subType, const std::string& message) 

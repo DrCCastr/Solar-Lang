@@ -3,9 +3,8 @@
  * @brief Main file of the project
  */
 
-#include "ast/ast.hpp"
-#include "runtime/runner.hpp"
-#include "lexer/tokenizer.hpp"
+#include "solar_lib.hpp"
+#include <stdexcept>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -25,17 +24,20 @@ std::string readFile(const std::string& path) {
 int main()
 {
     try {
+        Env env;
         Parser parser;
         std::string content = readFile("../test/script.sun");
 
+        env.declareValue("x", NumberValue(1), {0, 0, 0});
+
         auto tokens = lexerParse(content);
         std::unique_ptr<Stmt> program = parser.produceAST(tokens);
-        auto result = evaluateNode(std::move(program));
+        auto result = evaluateNode(std::move(program), env);
 
-        std::cout << result->toString() << std::endl;
+        std::cout << std::visit([](auto&& arg) { return arg.toString(); }, result) << std::endl;
     }
     catch (const std::exception& e) {
-        std::cerr << "Erro: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
 

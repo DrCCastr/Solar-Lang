@@ -8,41 +8,49 @@
 /***
  * @brief Evaluate a program
  * @param program The program to evaluate ( std::unique_ptr<Stmt> )
+ * @param env The environment to evaluate in
  * @return The result of the program
  */
-std::unique_ptr<RuntimeValue> evaluateNode(std::unique_ptr<Stmt> astNode) {
+RuntimeValueV evaluateNode(std::unique_ptr<Stmt> astNode, Env& env) {
     switch (astNode->getKind()) {
         case NodeType::Program: {
             return evaluateProgram(
                 std::unique_ptr<Program>(
                     static_cast<Program*>(astNode.release())
-                )
+                ),
+                env
             );
         }
 
         case NodeType::NumericLiteral: {
             const auto& numLit = static_cast<const NumericLiteral&>(*astNode);
-            return std::make_unique<NumberValue>(numLit.value);
+            return NumberValue(numLit.value);
         }
 
         case NodeType::NullLiteral: {
-            return std::make_unique<NullValue>();
+            return NullValue();
         }
 
         case NodeType::Identifier: {
-            return std::make_unique<NullValue>(); // TODO: Implement
+            const auto& ident = static_cast<const Identifier&>(*astNode);
+            return env.lookupValue(ident.name, {0, 0, 0});
         }
 
         case NodeType::BinaryExpr: {
             return evaluateBinop(
                 std::unique_ptr<BinaryExpr>(
                     static_cast<BinaryExpr*>(astNode.release())
-                )
+                ),
+                env
             );
         }
 
         default: {
-            throw SolarError::RuntimeError("Unexpected", "Unknown node: " + astNode->toString());
+            throw Error::RuntimeError(
+                "Unexpected", 
+                "Unknown node type: " + std::to_string(static_cast<int>(astNode->getKind())) +
+                " at " + astNode->position.toString()
+            );
         }
     }
 }

@@ -71,6 +71,7 @@ public:
 
     NodePos position;
 protected:
+    // Auxiliary function to output the code.
     std::string indent(int level) const {
         return std::string(level * 2, ' ');
     }

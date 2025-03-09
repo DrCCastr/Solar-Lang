@@ -8,10 +8,10 @@
 #include "error_base.hpp"
 
 /***
- * @namespace SolarError
+ * @namespace Error
  * @brief Implements Ast errors to namespace.
  */
-namespace SolarError {
+namespace Error {
     class AstError : public BaseError {
     public:
         explicit AstError(const std::string& subType, const std::string& message) 

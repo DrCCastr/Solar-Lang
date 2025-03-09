@@ -10,3 +10,4 @@
 #include "evaluate/expr.hpp"
 #include "evaluate/stmt.hpp"
 #include "runtime_error.hpp"
+#include "env.hpp"
