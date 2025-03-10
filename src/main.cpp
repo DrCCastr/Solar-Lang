@@ -28,8 +28,6 @@ int main()
         Parser parser;
         std::string content = readFile("../test/script.sun");
 
-        env.declareValue("x", NumberValue(1), {0, 0, 0});
-
         auto tokens = lexerParse(content);
 
         std::unique_ptr<Stmt> program = parser.produceAST(tokens);

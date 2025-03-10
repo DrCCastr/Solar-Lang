@@ -28,7 +28,7 @@ Token Parser::expect(TokenEnum expected, std::string err) {
         throw Error::SyntaxError(
             "Expected: " + 
             TokenEnumString(expected) + 
-            "at " + tk.pos.toString() +  
+            " at " + tk.pos.toString() +  
             ", Got: " + TokenEnumString(tk.type) + 
             err
         );

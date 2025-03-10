@@ -1,3 +1,6 @@
-var x = 1;
+var pi = 3.14; // Pi value
+var r = 10; // Radius of circle
 
-x + 1
+var c = pi * 2 * r; // Circuference of circle
+
+c // Programs return the variable

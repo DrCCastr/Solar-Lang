@@ -9,11 +9,6 @@ static const std::vector<std::pair<std::string, TokenEnum>> keywords = {
     {"var", TokenEnum::Var},
 };
 
-/***
- * @brief Checks if a word is a keyword.
- * @param word The word to check ( const std::string& ).
- * @return The token type of the keyword / identifier.
- */
 TokenEnum isKeyword(const std::string& word) {
     for (const auto& keyword : keywords) {
         if (word == keyword.first) {
@@ -23,34 +18,17 @@ TokenEnum isKeyword(const std::string& word) {
     return TokenEnum::Ident;
 }
 
-/***
- * @brief Pushes a token to the token list.
- * @param tokenList The token list ( std::vector<Token>& ).
- * @param type The token type ( TokenEnum ).
- * @param content The token content ( const std::string& ).
- * @param pos The token position ( TokenPos ).
- */
 void lexerPush(std::vector<Token>& tokenList, TokenEnum type, const std::string& content, TokenPos pos) {
     tokenList.emplace_back(type, content, pos);
 }
 
-/***
- * @brief Checks if a character is valid.
- * @param chr The character to check ( char ).
- * @return True if the character is valid, false otherwise.
- */
 bool validChar(char chr) {
     return (chr == '\t' || chr == ' ' || std::isdigit(chr) || std::isalpha(chr) || chr == '_' || chr == ';');
 }
 
-/***
- * @brief Parses a source code string and returns a list of tokens.
- * @param source The source code string ( const std::string& ).
- * @return The list of tokens ( std::vector<Token> ).
- */
 std::vector<Token> lexerParse(const std::string& source) {
     std::vector<Token> tokens;
-    
+
     if (source.empty()) return tokens;
 
     size_t pos = 0;
@@ -61,44 +39,55 @@ std::vector<Token> lexerParse(const std::string& source) {
         char current = source[i];
         pos++;
 
-        switch (current) {
-            case ';': lexerPush(tokens, TokenEnum::Semicolon, ";", {line, pos, pos}); break;
-            case '=': lexerPush(tokens, TokenEnum::Equals, "=", {line, pos, pos}); break;
-            case '(': lexerPush(tokens, TokenEnum::LParam, "(", {line, pos, pos}); break;
-            case ')': lexerPush(tokens, TokenEnum::RParam, ")", {line, pos, pos}); break;
-            case '+': case '-': case '*': case '/': case '%':
-                lexerPush(tokens, TokenEnum::BinaryOp, std::string(1, current), {line, pos, pos});
-                break;
-            case '\n':
+        if (std::isspace(current)) {
+            if (current == '\n') {
                 line++;
                 pos = 0;
-                break;
+            }
+            continue;
+        }
 
-            default:
-                if (!validChar(current)) {
-                    throw Error::IlegalCharacter(
-                        "Illegal character '" +
-                        std::string(1, current) + 
-                        "' at " + std::to_string(line) + 
-                        "-" + 
-                        std::to_string(pos) + 
-                        ":" + std::to_string(pos)
-                    );
-                }
-                break;
+        if (current == '/' && i + 1 < len && source[i + 1] == '/') {
+            while (i < len && source[i] != '\n') i++;
+            continue;
+        }
+
+        switch (current) {
+            case ';': lexerPush(tokens, TokenEnum::Semicolon, ";", {line, pos, pos}); continue;
+            case '=': lexerPush(tokens, TokenEnum::Equals, "=", {line, pos, pos}); continue;
+            case '(': lexerPush(tokens, TokenEnum::LParam, "(", {line, pos, pos}); continue;
+            case ')': lexerPush(tokens, TokenEnum::RParam, ")", {line, pos, pos}); continue;
+            case '+': case '-': case '*': case '/': case '%':
+                lexerPush(tokens, TokenEnum::BinaryOp, std::string(1, current), {line, pos, pos});
+                continue;
         }
 
         if (std::isdigit(current)) {
             size_t start_pos = pos;
             size_t start = i;
+            bool hasDecimal = false;
 
             while (i < len && (std::isdigit(source[i]) || source[i] == '.')) {
+                if (source[i] == '.') {
+                    if (hasDecimal) {
+                        throw Error::IlegalCharacter(
+                            "Invalid number format: multiple decimal points at " + 
+                            std::to_string(line) + ":" + std::to_string(pos)
+                        );
+                    }
+                    hasDecimal = true;
+                }
                 i++;
                 pos++;
             }
 
-            lexerPush(tokens, TokenEnum::Number, source.substr(start, i - start), {line, start_pos, pos - 1});
+            lexerPush(
+                tokens, TokenEnum::Number, 
+                source.substr(start, i - start), 
+                {line, start_pos, pos - 1}
+            );
             i--;
+            continue;
         }
 
         if (std::isalpha(current) || current == '_') {
@@ -110,12 +99,20 @@ std::vector<Token> lexerParse(const std::string& source) {
                 pos++;
             }
 
-            lexerPush(tokens, isKeyword(source.substr(start, i - start)), source.substr(start, i - start), {line, start_pos, pos - 1});
+            std::string word = source.substr(start, i - start);
+            lexerPush(tokens, isKeyword(word), word, {line, start_pos, pos - 1});
             i--;
+            continue;
+        }
+
+        if (!validChar(current)) {
+            throw Error::IlegalCharacter(
+                "Illegal character '" + std::string(1, current) + 
+                "' at " + std::to_string(line) + ":" + std::to_string(pos)
+            );
         }
     }
 
-    // EOF ( End of File ) Token
-    lexerPush(tokens, TokenEnum::FE, "", {0, 0, 0});
+    lexerPush(tokens, TokenEnum::FE, "", {line, pos, pos});
     return tokens;
 }
