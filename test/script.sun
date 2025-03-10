@@ -1,4 +1,4 @@
-var pi = 3.14; // Pi value
+var pi = 3.14159; // Pi value
 var r = 10; // Radius of circle
 
 var c = pi * 2 * r; // Circuference of circle

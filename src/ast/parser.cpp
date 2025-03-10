@@ -165,7 +165,7 @@ std::unique_ptr<Expr> Parser::parsePrimaryExpr() {
 
     switch (tkType) {
         case TokenEnum::Ident: return std::make_unique<Identifier>(this->next().content, ndPos); break;
-        case TokenEnum::Number: return std::make_unique<NumericLiteral>(std::stoi(this->next().content), ndPos); break;
+        case TokenEnum::Number: return std::make_unique<NumericLiteral>(std::stod(this->next().content), ndPos); break;
         case TokenEnum::LParam: {
             this->next();
             auto expr = this->parseExpr();

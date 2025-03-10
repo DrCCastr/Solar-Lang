@@ -64,29 +64,37 @@ std::vector<Token> lexerParse(const std::string& source) {
 
         if (std::isdigit(current)) {
             size_t start_pos = pos;
-            size_t start = i;
             bool hasDecimal = false;
 
-            while (i < len && (std::isdigit(source[i]) || source[i] == '.')) {
-                if (source[i] == '.') {
-                    if (hasDecimal) {
-                        throw Error::IlegalCharacter(
-                            "Invalid number format: multiple decimal points at " + 
-                            std::to_string(line) + ":" + std::to_string(pos)
-                        );
-                    }
-                    hasDecimal = true;
-                }
+            i--;
+
+            std::string number;
+            while (i < len) {
                 i++;
+                if (i >= len) break;
+
+                current = source[i];
+
+                if (std::isdigit(current)) {
+                    number += current;
+                }
+                else if (current == '.' && !hasDecimal) {
+                    hasDecimal = true;
+                    number += current;
+                }
+                else {
+                    i--;
+                    break;
+                }
                 pos++;
             }
 
             lexerPush(
-                tokens, TokenEnum::Number, 
-                source.substr(start, i - start), 
-                {line, start_pos, pos - 1}
+                tokens, 
+                TokenEnum::Number,
+                number,
+                {line, start_pos, pos}
             );
-            i--;
             continue;
         }
 
