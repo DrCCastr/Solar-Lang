@@ -15,8 +15,14 @@
  */
 class Env {
 public:
-    Env(std::unique_ptr<Env> parent = nullptr) 
-        : parent(std::move(parent)) {}
+    Env(std::unique_ptr<Env> parent = nullptr, bool defaultVals = false)
+        : parent(std::move(parent)) {
+        if (defaultVals) {
+            this->declareValue("null", NullValue(), {0, 0, 0, 0});
+            this->declareValue("false", BoolValue(false), {0, 0, 0, 0});
+            this->declareValue("true", BoolValue(true), {0, 0, 0, 0});
+        }
+        }
 
     RuntimeValueV declareValue(const std::string& name, RuntimeValueV value, const NodePos& position) {
         if (store.find(name) != store.end()) {

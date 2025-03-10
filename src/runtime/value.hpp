@@ -9,7 +9,8 @@
 
 enum class ValueType {
     Null,
-    Number
+    Number,
+    Bool
 };
 
 /***
@@ -46,7 +47,7 @@ public:
  */
 class NumberValue : public RuntimeValue {
 public:
-    NumberValue(double value) : value(value) {}
+    NumberValue(double value = 0) : value(value) {}
 
     ValueType getType() const override { return ValueType::Number; }
     std::string getTypeString() const override { return "Number"; }
@@ -55,6 +56,22 @@ public:
     double value;
 };
 
+
+/***
+ * @class BoolValue
+ * @property value The value of the Boolean ( bool ).
+ */
+class BoolValue : public RuntimeValue {
+public:
+    BoolValue(bool value = false) : value(value) {}
+
+    ValueType getType() const override { return ValueType::Bool; }
+    std::string getTypeString() const override { return "Bool"; }
+    std::string toString() const override { return "Boolean: " + std::to_string(value); }
+
+    bool value;
+};
+
 // Define a variant type for runtime values.
 // Example: RuntimeValueV function() { if (condition) return NullValue(); else return NumberValue(42); }
-typedef std::variant<NullValue, NumberValue> RuntimeValueV;
+typedef std::variant<NullValue, NumberValue, BoolValue> RuntimeValueV;

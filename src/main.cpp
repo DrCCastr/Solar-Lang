@@ -24,7 +24,7 @@ std::string readFile(const std::string& path) {
 int main()
 {
     try {
-        Env env;
+        Env env(nullptr, true);
         Parser parser;
         std::string content = readFile("../test/script.sun");
 
