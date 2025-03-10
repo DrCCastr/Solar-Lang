@@ -12,12 +12,9 @@
 
 enum class NodeType {
     Program,
-
-    NumericLiteral,
-    NullLiteral,
-
+    NumericLiteral, NullLiteral,
     Identifier,
-
+    VarDeclaration,
     BinaryExpr
 };
 
@@ -54,6 +51,10 @@ struct NodePos {
     }
 };
 
+///////////////
+// Statments //
+///////////////
+
 /***
  * @class Stmt
  * @brief Represents a statement.
@@ -78,6 +79,12 @@ protected:
 };
 
 /***
+ * @class Expr
+ * @brief Represents an expression.
+ */
+class Expr : public Stmt {};
+
+/***
  * @class Program
  * @property body The body of the program ( vector<unique_ptr<Stmt>> ).
  */
@@ -90,14 +97,16 @@ public:
     NodeType getKind() const override { return NodeType::Program; }
     std::string toString(int indentLevel = 0) const override {
         std::string result;
-        result += indent(indentLevel) + "Program\n";
-        result += indent(indentLevel) + "Body: {\n";
+        result += indent(indentLevel) + "Program {\n";
+        result += indent(indentLevel + 1) + "Body: {\n";
 
         for (const auto& stmt : body) {
-            result += stmt->toString(indentLevel + 1) + "\n";
+            result += stmt->toString(indentLevel + 2) + "\n";
         }
 
-        result += indent(indentLevel) + "}";
+        result += indent(indentLevel + 1) + "}\n";
+        result += "}";
+
         return result;
     }
 
@@ -105,10 +114,35 @@ public:
 };
 
 /***
- * @class Expr
- * @brief Represents an expression.
+ * @class VarDeclaration
+ * @property value The value of variable ( std::unique_ptr<Expr> || nullptr )
+ * @property identifier The name of variable ( std::string )
  */
-class Expr : public Stmt {};
+class VarDeclaration : public Stmt {
+public:
+    VarDeclaration(std::unique_ptr<Expr> value, std::string identifier, const NodePos& position) : value(std::move(value)), identifier(identifier) {
+        this->position = position;
+    }
+
+    NodeType getKind() const override { return NodeType::VarDeclaration; }
+    std::string toString(int indentLevel = 0) const override {
+        std::string result;
+
+        result += indent(indentLevel) + "VarDeclaration {\n";
+        result += this->value->toString(indentLevel + 1);
+        result += indent(indentLevel + 1) + "Identifier: " + this->identifier + "\n";
+        result += indent(indentLevel) + "}";
+
+        return result;
+    }
+
+    std::unique_ptr<Expr> value;
+    std::string identifier;
+};
+
+/////////////////
+// Expressions //
+/////////////////
 
 /***
  * @class NumericLiteral

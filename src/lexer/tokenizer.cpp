@@ -6,8 +6,7 @@
 #include "tokenizer.hpp"
 
 static const std::vector<std::pair<std::string, TokenEnum>> keywords = {
-    {"Var", TokenEnum::Var},
-    {"Null", TokenEnum::Null}
+    {"var", TokenEnum::Var},
 };
 
 /***

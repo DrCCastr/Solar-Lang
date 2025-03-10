@@ -16,3 +16,11 @@
  * @return The result of the Program
  */
 RuntimeValueV evaluateProgram(std::unique_ptr<Program> program, Env& env);
+
+/***
+ * @brief Evaluate a Var declaration
+ * @param varDeclaration The var declaration to evaluate ( std::unique_ptr<VarDeclaration> )
+ * @param Env The environment ( Env& )
+ * @return The value of Variable, To make "var x = var y = 10;" possible
+ */
+RuntimeValueV evaluateVarDeclaration(std::unique_ptr<VarDeclaration> varDeclaration, Env& env);

@@ -23,13 +23,16 @@ private:
     /*** * @brief Consumes the actual token and returns the next one. */
     Token next();
     /*** * @brief Expects a token and returns it if it is the expected one. */
-    Token expect(TokenEnum expected, std::string err = ", Invalid expression.");
+    Token expect(TokenEnum expected, std::string err = "");
     /*** * @brief Returns the actual token. */
     const Token& actual();
     /*** * @brief Checks if the token list is not empty. */
     bool notEOF() const;
 
+    // Statments
     std::unique_ptr<Stmt> parseStmt();
+    std::unique_ptr<Stmt> parseVarDeclaration();
+    // Expressions
     std::unique_ptr<Expr> parseExpr();
     std::unique_ptr<Expr> parseAddtiveExpr();
     std::unique_ptr<Expr> parseMultiplicativeExpr();

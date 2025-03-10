@@ -69,13 +69,48 @@ std::unique_ptr<Program> Parser::produceAST(std::vector<Token> tokens) {
     return program;
 }
 
+///////////////
+// Statments //
+///////////////
+
 /***
  * @brief Parses a statement and returns it.
  * @return The statement.
  */
 std::unique_ptr<Stmt> Parser::parseStmt() {
-    return this->parseExpr();
+    switch (this->actual().type) {
+        case TokenEnum::Var: return this->parseVarDeclaration();
+
+        default: return this->parseExpr(); break;
+    }
 }
+
+/***
+ * @brief Parse a variable declarationa nd returns it.
+ * @return The var declaration
+ */
+std::unique_ptr<Stmt> Parser::parseVarDeclaration() {
+    auto startPos = this->next().pos;
+
+    auto ident = this->expect(TokenEnum::Ident).content;
+    std::unique_ptr<Expr> value;
+
+    if (this->actual().type != TokenEnum::Semicolon) {
+        this->expect(TokenEnum::Equals);
+
+        value = this->parseExpr();
+
+        this->expect(TokenEnum::Semicolon);
+    } else {
+        this->next();
+    }
+
+    return std::make_unique<VarDeclaration>(std::move(value), ident, NodePos::combineTP(startPos, startPos));
+}
+
+/////////////////
+// Expressions //
+/////////////////
 
 /***
  * @brief Parses an expression and returns it.
@@ -130,10 +165,7 @@ std::unique_ptr<Expr> Parser::parsePrimaryExpr() {
 
     switch (tkType) {
         case TokenEnum::Ident: return std::make_unique<Identifier>(this->next().content, ndPos); break;
-
-        case TokenEnum::Null: this->next(); return std::make_unique<NullLiteral>(ndPos); break;
         case TokenEnum::Number: return std::make_unique<NumericLiteral>(std::stoi(this->next().content), ndPos); break;
-
         case TokenEnum::LParam: {
             this->next();
             auto expr = this->parseExpr();

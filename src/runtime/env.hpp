@@ -18,7 +18,7 @@ public:
     Env(std::unique_ptr<Env> parent = nullptr) 
         : parent(std::move(parent)) {}
 
-    RuntimeValueV declareValue(const std::string& name, RuntimeValueV value, const TokenPos& position) {
+    RuntimeValueV declareValue(const std::string& name, RuntimeValueV value, const NodePos& position) {
         if (store.find(name) != store.end()) {
             throw Error::InvalidExpressionError(
                 "Variable " + name +
@@ -31,7 +31,7 @@ public:
         return value;
     }
 
-    RuntimeValueV assignValue(const std::string& name, RuntimeValueV value, const TokenPos& position) {
+    RuntimeValueV assignValue(const std::string& name, RuntimeValueV value, const NodePos& position) {
         Env& env = resolve(name, position);
         auto it = env.store.find(name);
 
@@ -47,7 +47,7 @@ public:
         return value;
     }
 
-    RuntimeValueV lookupValue(const std::string& name, const TokenPos& position) {
+    RuntimeValueV lookupValue(const std::string& name, const NodePos& position) {
         const Env& env = resolve(name, position);
         auto it = env.store.find(name);
 
@@ -62,7 +62,7 @@ public:
         return it->second;
     }
 
-    Env& resolve(const std::string& name, const TokenPos& position) {
+    Env& resolve(const std::string& name, const NodePos& position) {
         if (store.find(name) != store.end()) {
             return *this;
         }

@@ -31,7 +31,10 @@ int main()
         env.declareValue("x", NumberValue(1), {0, 0, 0});
 
         auto tokens = lexerParse(content);
+
         std::unique_ptr<Stmt> program = parser.produceAST(tokens);
+        std::cout << program->toString() << std::endl;
+
         auto result = evaluateNode(std::move(program), env);
 
         std::cout << std::visit([](auto&& arg) { return arg.toString(); }, result) << std::endl;

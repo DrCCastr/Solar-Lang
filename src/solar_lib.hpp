@@ -19,6 +19,6 @@
     #include "runtime/runtime.hpp"
 // }
 
-#define SOLAR_VERSION "0.1"
+#define SOLAR_VERSION "0.3"
 #define SOLAR_VERSION_MAJOR 0
-#define SOLAR_VERSION_MINOR 0
+#define SOLAR_VERSION_MINOR 3

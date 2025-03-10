@@ -11,20 +11,11 @@
 #include <vector>
 
 enum class TokenEnum {
-    Ident,
-    Var,
-
-    Null,
+    Ident, Var,
     Number,
-
     Semicolon,
-
-    LParam,
-    RParam,
-
-    BinaryOp,
-    Equals,
-
+    LParam, RParam,
+    BinaryOp, Equals,
     FE
 };
 
