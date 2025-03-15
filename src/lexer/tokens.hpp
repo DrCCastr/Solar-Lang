@@ -1,46 +1,73 @@
 /***
  * @file tokens.hpp
- * @brief Defines the Token struct.
  */
 
 #pragma once
 
+//////////////
+// Includes //
+//////////////
+
 #include <iostream>
-#include <string>
-#include <memory>
 #include <vector>
 
-enum class TokenEnum {
-    Ident, Var,
-    Number,
-    Semicolon,
-    LParam, RParam,
-    BinaryOp, Equals,
-    FE
-};
+//////////
+// Code //
+//////////
 
-/**
- * @brief Converts a TokenEnum to a string.
- * @param tokenEnum The TokenEnum to convert.
- * @return std::string The string representation of the TokenEnum.
- */
-std::string TokenEnumString(const TokenEnum& tokenEnum);
+namespace Solar {
+namespace Lexer {
 
-struct TokenPos {
-    size_t line;
-    size_t start;
-    size_t end;
+    // Definitions
+    enum class TokenType {
+        Ident,
 
-    std::string toString() const {
-        return std::to_string(line) + "-" + std::to_string(start) + ":" + std::to_string(end);
-    }
-};;
+        Var,
+        If, Else,
 
-struct Token {
-    TokenEnum type;
-    std::string content;
-    TokenPos pos;
+        Integer,
+        Float,
 
-    Token(TokenEnum type, const std::string& content, TokenPos pos)
-        : type(type), content(content), pos(pos) {}
-};
+        Semicolon,
+        Comma,
+        Dot,
+
+        OpenParen, 
+        CloseParen, 
+        OpenBracket, 
+        CloseBracket, 
+        OpenBrace, 
+        CloseBrace,
+
+        Equals, // =
+        Plus, // +
+        Minus, // -
+        Star, // *
+        Slash, // "/"
+        Pow, // ^
+        Mod, // %
+
+        EOF_,
+    };
+
+    struct TokenPos {
+        size_t line;
+        size_t start;
+        size_t end;
+
+        std::string toString() const {
+            return "L(" + std::to_string(this->line) + ")" + std::to_string(this->start) + ":" + std::to_string(this->end);
+        };
+    };
+
+    struct Token {
+        TokenPos pos;
+        TokenType type;
+        std::string content;
+    };
+
+    // Constants
+    const std::vector<std::pair<std::string, TokenType>> Keywords = {};
+
+}
+}

@@ -3,7 +3,6 @@
  * @brief Main file of the project
  */
 
-#include "solar_lib.hpp"
 #include <stdexcept>
 #include <string>
 #include <iostream>
@@ -23,24 +22,5 @@ std::string readFile(const std::string& path) {
 
 int main()
 {
-    try {
-        Env env(nullptr, true);
-        Parser parser;
-        std::string content = readFile("../test/script.sun");
-
-        auto tokens = lexerParse(content);
-
-        std::unique_ptr<Stmt> program = parser.produceAST(tokens);
-        std::cout << program->toString() << std::endl;
-
-        auto result = evaluateNode(std::move(program), env);
-
-        std::cout << std::visit([](auto&& arg) { return arg.toString(); }, result) << std::endl;
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
-
     return 0;
 }

@@ -1,12 +1,24 @@
 /***
  * @file tokenizer.hpp
- * @brief Declares the Tokenizer.
  */
 
 #pragma once
 
-#include "tokens.hpp"
-#include "lexer_error.hpp"
-#include <vector>
+//////////////
+// Includes //
+//////////////
 
-std::vector<Token> lexerParse(const std::string& source);
+#include <stdexcept>
+#include "tokens.hpp"
+
+//////////
+// Code //
+//////////
+
+namespace Solar {
+namespace Lexer {
+
+    std::vector<Token> tokenize(std::string source);
+
+}
+}
