@@ -57,12 +57,14 @@ namespace Lexer {
 
                 case ',': tokens.push_back(Token {{line, pos, pos}, TokenType::Comma, ","}); break;
                 case '.': tokens.push_back(Token {{line, pos, pos}, TokenType::Dot, "."}); break;
+                case ';': tokens.push_back(Token {{line, pos, pos}, TokenType::Semicolon, ";"}); break;
 
                 case '=': tokens.push_back(Token {{line, pos, pos}, TokenType::Equals, "="}); break;
                 case '-': tokens.push_back(Token {{line, pos, pos}, TokenType::Minus, "-"}); break;
                 case '+': tokens.push_back(Token {{line, pos, pos}, TokenType::Plus, "+"}); break;
-                case ';': tokens.push_back(Token {{line, pos, pos}, TokenType::Semicolon, ";"}); break;
                 case '*': tokens.push_back(Token {{line, pos, pos}, TokenType::Star, "*"}); break;
+                case '/': tokens.push_back(Token {{line, pos, pos}, TokenType::Slash, "/"}); break;
+                case '^': tokens.push_back(Token {{line, pos, pos}, TokenType::Pow, "^"}); break;
                 default: {
                     throw std::runtime_error(
                         "Unexpected character: '" +

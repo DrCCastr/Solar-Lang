@@ -69,5 +69,34 @@ namespace Lexer {
     // Constants
     const std::vector<std::pair<std::string, TokenType>> Keywords = {};
 
+    // Functions
+    inline std::string TToString(const TokenType& tt) {
+        switch (tt) {
+            case TokenType::Ident: return "Ident";
+            case TokenType::Var: return "Var";
+            case TokenType::If: return "If";
+            case TokenType::Else: return "Else";
+            case TokenType::Integer: return "Integer";
+            case TokenType::Float: return "Float";
+            case TokenType::Semicolon: return "Semicolon";
+            case TokenType::Comma: return "Comma";
+            case TokenType::Dot: return "Dot";
+            case TokenType::OpenParen: return "OpenParen";
+            case TokenType::CloseParen: return "CloseParen";
+            case TokenType::OpenBracket: return "OpenBracket";
+            case TokenType::CloseBracket: return "CloseBracket";
+            case TokenType::OpenBrace: return "OpenBrace";
+            case TokenType::CloseBrace: return "CloseBrace";
+            case TokenType::Equals: return "Equals";
+            case TokenType::Plus: return "Plus";
+            case TokenType::Minus: return "Minus";
+            case TokenType::Star: return "Star";
+            case TokenType::Slash: return "Slash";
+            case TokenType::Pow: return "Pow";
+            case TokenType::Mod: return "Mod";
+            case TokenType::EOF_: return "EOF";
+            default: return "Unknown";
+        }
+    }
 }
 }
