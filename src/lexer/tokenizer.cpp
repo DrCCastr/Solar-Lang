@@ -37,6 +37,13 @@ namespace Lexer {
                 while (isdigit(source[start]) || source[start] == '.') {
                     if (source[start] == '.') {
                         if (isFloat) break; // One dot
+                        if (!isdigit(source[1])) throw std::runtime_error(
+                            "Expected number after dot at: " +
+                            (TokenPos {line, pos, pos}).toString() +
+                            ", founded: '" +
+                            source[1] +
+                            "'"
+                        );
                         isFloat = true;
                     }
                     start++;
