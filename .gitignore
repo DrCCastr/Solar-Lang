@@ -1,4 +1,5 @@
 build/
 .vscode/
-cmd.md
 old/
+cmd.md
+self.md
