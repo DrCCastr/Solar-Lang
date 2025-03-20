@@ -30,7 +30,7 @@ namespace Error {
         size_t line;
         size_t column;
 
-        Error(string content, string file = "unknown", size_t line = 0, size_t column = 0)
+        Error(string content, string file = "Unknown", size_t line = 0, size_t column = 0)
             : content(move(content)), file(move(file)), line(line), column(column) {}
 
         string format() const {
@@ -45,11 +45,11 @@ namespace Error {
         vector<Error> errors;
 
     public:
-        void addError(string content, string file = "unknown", size_t line = 0, size_t column = 0) {
+        void addError(string content, string file = "Unknown", size_t line = 0, size_t column = 0) {
             errors.emplace_back(move(content), move(file), line, column);
         }
 
-        void debug(bool end = false) {
+        void debug(bool end = true) {
             if (errors.empty()) {
                 cout << "No errors found.\n";
                 return;

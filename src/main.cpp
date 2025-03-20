@@ -6,7 +6,7 @@
 // Includes //
 //////////////
 
-#include "lexer/lexer.hpp"
+#include "solar_pack.hpp"
 #include <stdexcept>
 #include <string>
 #include <iostream>
@@ -33,11 +33,10 @@ string readFile(const string& path) {
 
 int main()
 {
-    auto tokens = Lexer::tokenize(readFile("../test/script.sun"));
+    Ast::Parser parser;
 
-    for (const auto& token : tokens) {
-        cout << token.content << " : " << Lexer::TToString(token.type) << " " << token.pos.toString() << endl;
-    }
+    auto result = parser.parseCode(readFile("../test/script.sun"), "script.sun");
+    cout << result->debug() << endl;
 
     return 0;
 }

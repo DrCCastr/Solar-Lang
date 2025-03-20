@@ -93,9 +93,10 @@ namespace Lexer {
     struct TokenPos {
         size_t line;
         size_t collum;
+        string file;
 
         string toString() const {
-            return to_string(this->line) + ":" + to_string(this->collum);
+            return file + "-" + to_string(this->line) + ":" + to_string(this->collum);
         };
     };
 

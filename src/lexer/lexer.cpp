@@ -17,7 +17,7 @@ using namespace std;
 namespace Solar {
 namespace Lexer {
 
-    vector<Token> tokenize(string source, string file = "unknow") {
+    vector<Token> tokenize(string source, string file) {
         Error::ErrorSesion errSession;
         vector<Token> tokens;
         size_t pos = 0;
@@ -54,7 +54,7 @@ namespace Lexer {
                     start++;
                 }
 
-                tokens.push_back(Token {{line, pos + start - 1}, TokenType::Number, source.substr(0, start)});
+                tokens.push_back(Token {{line, pos + start - 1, file}, TokenType::Number, source.substr(0, start)});
                 source.erase(0, start);
                 pos += start - 1;
                 continue;
@@ -75,7 +75,7 @@ namespace Lexer {
                 }
 
                 string chr(1, source[1]);
-                tokens.push_back(Token {{line, pos}, TokenType::Char, chr});
+                tokens.push_back(Token {{line, pos, file}, TokenType::Char, chr});
                 source.erase(0, 3);
                 pos += 3;
                 continue;
@@ -107,7 +107,7 @@ namespace Lexer {
                     continue;
                 }
 
-                tokens.push_back(Token {{line, pos}, TokenType::String, str});
+                tokens.push_back(Token {{line, pos, file}, TokenType::String, str});
                 source.erase(0, endPos + 1);
                 pos += endPos + 1;
                 continue;
@@ -128,7 +128,7 @@ namespace Lexer {
                     type = it->second;
                 }
 
-                tokens.push_back(Token {{line, pos}, type, word});
+                tokens.push_back(Token {{line, pos, file}, type, word});
                 source.erase(0, start);
                 pos += start - 1;
                 continue;
@@ -158,7 +158,7 @@ namespace Lexer {
                 else found = false;
 
                 if (found) {
-                    tokens.push_back(Token {{line, pos}, type, op});
+                    tokens.push_back(Token {{line, pos, file}, type, op});
                     source.erase(0, 2);
                     pos++;
                     continue;
@@ -206,13 +206,13 @@ namespace Lexer {
                 }
             }
 
-            tokens.push_back(Token {{line, pos}, type, string(1, source[0])});
+            tokens.push_back(Token {{line, pos, file}, type, string(1, source[0])});
             source.erase(0, 1);
         }
 
         errSession.debug();
 
-        tokens.push_back(Token {{line, pos}, TokenType::EOF_, ""});
+        tokens.push_back(Token {{line, pos, file}, TokenType::EOF_, ""});
         return tokens;
     }
 

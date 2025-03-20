@@ -1,2 +1,4 @@
-#include "tokenizer.hpp"
+#pragma once
+
 #include "tokens.hpp"
+#include "lexer.hpp"
