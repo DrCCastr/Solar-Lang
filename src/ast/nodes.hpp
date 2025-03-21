@@ -32,8 +32,10 @@ namespace Ast {
         StringExpr,
         IdentExpr,
 
+        AssignmentExpr,
         BinaryExpr,
-        ConditionExpr
+        LogicalExpr,
+        ComparasonExpr,
     };
 
     class Stmt {
@@ -146,6 +148,26 @@ namespace Ast {
         NodeType getKind() const override { return NodeType::IdentExpr; }
     };
 
+    class AssignmentExpr : public Expr {
+    public:
+        string identifier;
+        ExprPtr value;
+
+        AssignmentExpr(string identifier, ExprPtr value)
+        : identifier(identifier), value(value) {}
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "AssignmentExpr: {\n";
+            result += string((indent + 1) * 2, ' ') + "Identifier: " + identifier + "\n";
+            result += string((indent + 1) * 2, ' ') + "Value: " + value->debug() + "\n";
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::AssignmentExpr; }
+    };
+
     class BinaryExpr : public Expr {
     public:
         ExprPtr left;
@@ -168,27 +190,49 @@ namespace Ast {
         NodeType getKind() const override { return NodeType::BinaryExpr; }
     };
 
-    class ConditionExpr : public Expr {
-        public:
-            ExprPtr left;
-            string op;
-            ExprPtr right;
-    
-            ConditionExpr(ExprPtr left, string op, ExprPtr right)
-                : left(left), op(op), right(right) {}
-    
-            string debug(int indent = 0) const override {
-                string result;
-                result += string(indent * 2, ' ') + "ConditionExpr: {\n";
-                result += left->debug(indent + 1);
-                result += string((indent + 1) * 2, ' ') + "Operator: " + op + "\n";
-                result += right->debug(indent + 1);
-                result += string(indent * 2, ' ') + "}\n";
-                return result;
-            }
-    
-            NodeType getKind() const override { return NodeType::ConditionExpr; }
-        };
+    class LogicalExpr : public Expr {
+    public:
+        ExprPtr left;
+        string op;
+        ExprPtr right;
+
+        LogicalExpr(ExprPtr left, string op, ExprPtr right)
+            : left(left), op(op), right(right) {}
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "LogicalExpr: {\n";
+            result += left->debug(indent + 1);
+            result += string((indent + 1) * 2, ' ') + "Operator: " + op + "\n";
+            result += right->debug(indent + 1);
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::LogicalExpr; }
+    };
+
+    class ComparasonExpr : public Expr {
+    public:
+        ExprPtr left;
+        string op;
+        ExprPtr right;
+
+        ComparasonExpr(ExprPtr left, string op, ExprPtr right)
+            : left(left), op(op), right(right) {}
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "ComparasonExpr: {\n";
+            result += left->debug(indent + 1);
+            result += string((indent + 1) * 2, ' ') + "Operator: " + op + "\n";
+            result += right->debug(indent + 1);
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::ComparasonExpr; }
+    };
 
 }
 }

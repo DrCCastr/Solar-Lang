@@ -65,10 +65,12 @@ namespace Ast {
     }
 
     // Expressions order
-    //  Operators Expr
-    //      Additive Expr
-    //      Multiplicative Expr
-    //  Primary Expr
+    // Assignment Expr
+    // Logical Expr
+    // Comparason Expr
+    // Additive Expr
+    // Multiplicative Expr
+    // Primary Expr
 
     // Expresisons //
     template <typename expr>
@@ -93,7 +95,28 @@ namespace Ast {
     }
 
     ExprPtr Parser::parseExpr() {
-        return this->parseAdditiveExpr();
+        return this->parseAssignExpr();
+    }
+
+    ExprPtr Parser::parseAssignExpr() {
+        auto left = this->parseLogicalExpr();
+
+        if (left->getKind() == NodeType::IdentExpr && this->actual().content == "=") {
+            this->next();
+            auto right = this->parseLogicalExpr();
+
+            left = make_shared<AssignmentExpr>(static_cast<IdentExpr*>(left.get())->value, right);
+        }
+
+        return left;
+    }
+
+    ExprPtr Parser::parseLogicalExpr() {
+        return this->parseOperatorExpr<LogicalExpr>([this](){ return this->parseComparasonExpr(); }, {"&&", "||"});
+    }
+
+    ExprPtr Parser::parseComparasonExpr() {
+        return this->parseOperatorExpr<ComparasonExpr>([this](){ return this->parseAdditiveExpr(); }, {"<=", "<", ">", ">=", "==", "!="});
     }
 
     ExprPtr Parser::parseAdditiveExpr() {
@@ -103,6 +126,7 @@ namespace Ast {
     ExprPtr Parser::parseMultiplicativeExpr() {
         return this->parseOperatorExpr<BinaryExpr>([this](){ return this->parsePrimaryExpr(); }, {"*", "/"});
     }
+
 
 
     ExprPtr Parser::parsePrimaryExpr() {

@@ -41,6 +41,9 @@ namespace Ast {
         template <typename Expr>
         ExprPtr parseOperatorExpr(std::function<ExprPtr()> subExpr, const vector<string>& ops);
         ExprPtr parseExpr();
+        ExprPtr parseAssignExpr();
+        ExprPtr parseLogicalExpr();
+        ExprPtr parseComparasonExpr();
         ExprPtr parseAdditiveExpr();
         ExprPtr parseMultiplicativeExpr();
 
