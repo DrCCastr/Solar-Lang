@@ -82,11 +82,11 @@ namespace Ast {
             return false;
         };
 
-        while (validOp(this->actual().content)) {
+        while (this->notEOF() && validOp(this->actual().content)) {
             auto op = this->next();
             auto right = subExpr();
 
-            return make_shared<expr>(left, op.content, right);
+            left = make_shared<expr>(left, op.content, right);
         }
 
         return left;
