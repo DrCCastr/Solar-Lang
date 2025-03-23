@@ -15,10 +15,9 @@ using namespace std;
 //////////
 
 namespace Solar {
-namespace Lexer {
 
     vector<Token> tokenize(string source, string file) {
-        Error::ErrorSesion errSession;
+        ErrorSesion errSession;
         vector<Token> tokens;
         size_t pos = 0;
         size_t line = 1;
@@ -54,7 +53,7 @@ namespace Lexer {
                     start++;
                 }
 
-                tokens.push_back(Token {{line, pos + start - 1, file}, TokenType::Number, source.substr(0, start)});
+                tokens.push_back(Token {{line, pos + start - 1, file}, hasDecimal ? TokenType::Float : TokenType::Int, source.substr(0, start)});
                 source.erase(0, start);
                 pos += start - 1;
                 continue;
@@ -113,7 +112,7 @@ namespace Lexer {
                 continue;
             }
 
-            // Identifiers/Keywords
+            // Identifiers Keywords TypesLiterals
             if (isalpha(source[0]) || source[0] == '_') {
                 size_t start = 0;
                 while (start < source.size() && (isalnum(source[start]) || source[start] == '_')) {
@@ -126,6 +125,11 @@ namespace Lexer {
                 auto it = Keywords.find(word);
                 if (it != Keywords.end()) {
                     type = it->second;
+                }
+
+                auto itType = TypesLiteral.find(word);
+                if (itType != TypesLiteral.end()) {
+                    type = itType->second;
                 }
 
                 tokens.push_back(Token {{line, pos, file}, type, word});
@@ -217,4 +221,4 @@ namespace Lexer {
     }
 
 }
-}
+

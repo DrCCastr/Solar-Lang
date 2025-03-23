@@ -14,7 +14,6 @@
 #include <sstream>
 
 using namespace std;
-using namespace Solar;
 
 //////////
 // Code //
@@ -33,7 +32,7 @@ string readFile(const string& path) {
 
 int main()
 {
-    Ast::Parser parser;
+    Solar::Parser parser;
 
     auto result = parser.parseCode(readFile("../test/script.sun"), "script.sun");
     cout << result->debug() << endl;

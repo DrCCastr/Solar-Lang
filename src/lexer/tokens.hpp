@@ -20,12 +20,15 @@ using namespace std;
 //////////
 
 namespace Solar {
-namespace Lexer {
 
     // Definitions
     enum class TokenType {
         EOF_,
-        Number,
+
+        Null,
+        Int,
+        Float,
+        Bool,
         Char,
         String,
         Identfier,
@@ -88,6 +91,7 @@ namespace Lexer {
         Typeof,
         Type,
         In,
+        Return,
     };
 
     struct TokenPos {
@@ -107,7 +111,7 @@ namespace Lexer {
     };
 
     // Constants
-    const unordered_map<::string, TokenType> Keywords = {
+    const unordered_map<string, TokenType> Keywords = {
         {"let", TokenType::Let},
         {"const", TokenType::Const},
         {"class", TokenType::Class},
@@ -122,14 +126,25 @@ namespace Lexer {
         {"export", TokenType::Export},
         {"typeof", TokenType::Typeof},
         {"type", TokenType::Type},
-        {"in", TokenType::In}
+        {"in", TokenType::In},
+        {"return", TokenType::Return}
+    };
+
+    const unordered_map<string, TokenType> TypesLiteral = {
+        {"true", TokenType::Bool},
+        {"false", TokenType::Bool},
+        {"null", TokenType::Null}
     };
 
     // Functions
     inline string TToString(const TokenType& tt) {
         switch (tt) {
             case TokenType::EOF_: return "EOF";
-            case TokenType::Number: return "Number";
+
+            case TokenType::Null: return "Null";
+            case TokenType::Bool: return "Bool";
+            case TokenType::Int: return "Int";
+            case TokenType::Float: return "Float;";
             case TokenType::Char: return "Char";
             case TokenType::String: return "String";
             case TokenType::Identfier: return "Identifier";
@@ -192,9 +207,10 @@ namespace Lexer {
             case TokenType::Typeof: return "Typeof";
             case TokenType::Type: return "Type";
             case TokenType::In: return "In";
-            default: return "Unknown";
+            case TokenType::Return: return "Return";
         }
+
+        return "Unknow";
     }
 
-}
 }

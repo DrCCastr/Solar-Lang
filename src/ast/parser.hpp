@@ -11,7 +11,7 @@
 #include "solar_pack.hpp"
 #include <vector>
 #include <functional>
-#include <unordered_set>
+#include <unordered_map>
 #include <memory>
 
 using namespace std;
@@ -21,25 +21,28 @@ using namespace std;
 //////////
 
 namespace Solar {
-namespace Ast {
 
     class Parser {
     private:
-        Error::ErrorSesion errSession;
-        vector<Lexer::Token> tokens;
+        ErrorSesion errSession;
+        vector<Token> tokens;
+        unordered_map<string, Type> userTypes;
 
         // Helpers //
-        Lexer::Token next();
-        Lexer::Token actual();
-        Lexer::Token expect(Lexer::TokenType expeted);
+        Token next();
+        Token actual();
+        Token peek(); // Next token without eating
+        Token expect(TokenType expeted);
+        Type parseType();
         bool notEOF();
 
         // Statments //
         StmtPtr parseStmt();
+        StmtPtr parseFuncStmt(string name = "");
 
         // Expressions //
         template <typename Expr>
-        ExprPtr parseOperatorExpr(std::function<ExprPtr()> subExpr, const vector<string>& ops);
+        ExprPtr parseOperatorExpr(std::function<ExprPtr()> subExpr, const vector<string>& ops, bool typeCheck = false);
         ExprPtr parseExpr();
         ExprPtr parseAssignExpr();
         ExprPtr parseLogicalExpr();
@@ -53,5 +56,4 @@ namespace Ast {
         shared_ptr<BlockStmt> parseCode(string source, string file = "Unknow");
     };
 
-}
 }

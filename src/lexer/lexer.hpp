@@ -19,9 +19,7 @@ using namespace std;
 //////////
 
 namespace Solar {
-namespace Lexer {
 
     std::vector<Token> tokenize(string source, string file = "Unknow");
 
-}
 }

@@ -21,7 +21,6 @@ using namespace std;
 //////////
 
 namespace Solar {
-namespace Error {
 
     class Error {
     public:
@@ -73,5 +72,4 @@ namespace Error {
         }
     };
 
-}
 }

@@ -6,4 +6,4 @@
 
 #define SOLAR_VER "1.4"
 #define SOLAR_MAJOR 1
-#define SOLAR_MINOR 4
+#define SOLAR_MINOR 7
