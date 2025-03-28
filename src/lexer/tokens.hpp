@@ -27,6 +27,7 @@ namespace Solar {
 
         Null,
         Int,
+        Double,
         Float,
         Bool,
         Char,
@@ -76,8 +77,7 @@ namespace Solar {
         Pow,
         Mod,
 
-        Let,
-        Const,
+        Var,
         Class,
         Struct,
         New,
@@ -112,8 +112,7 @@ namespace Solar {
 
     // Constants
     const unordered_map<string, TokenType> Keywords = {
-        {"let", TokenType::Let},
-        {"const", TokenType::Const},
+        {"var", TokenType::Var},
         {"class", TokenType::Class},
         {"struct", TokenType::Struct},
         {"new", TokenType::New},
@@ -144,7 +143,8 @@ namespace Solar {
             case TokenType::Null: return "Null";
             case TokenType::Bool: return "Bool";
             case TokenType::Int: return "Int";
-            case TokenType::Float: return "Float;";
+            case TokenType::Double: return "Double";
+            case TokenType::Float: return "Float";
             case TokenType::Char: return "Char";
             case TokenType::String: return "String";
             case TokenType::Identfier: return "Identifier";
@@ -192,8 +192,7 @@ namespace Solar {
             case TokenType::Pow: return "Pow";
             case TokenType::Mod: return "Mod";
 
-            case TokenType::Let: return "Let";
-            case TokenType::Const: return "Const";
+            case TokenType::Var: return "Var";
             case TokenType::Class: return "Class";
             case TokenType::Struct: return "Struct";
             case TokenType::New: return "New";

@@ -47,15 +47,39 @@ namespace Solar {
 
                 while (start < source.size() && (isdigit(source[start]) || source[start] == '.')) {
                     if (source[start] == '.') {
-                        if (hasDecimal) break;
+                        if (hasDecimal) {
+                            errSession.addError(
+                                "Extra dot is not allowed",
+                                file,
+                                line,
+                                pos + start
+                            );
+                            break;
+                        }
                         hasDecimal = true;
                     }
                     start++;
                 }
 
-                tokens.push_back(Token {{line, pos + start - 1, file}, hasDecimal ? TokenType::Float : TokenType::Int, source.substr(0, start)});
+                TokenType type_ = TokenType::Int;
+
+                if (hasDecimal) {
+                    if (start < source.size() && (source[start] == 'd' || source[start] == 'f')) {
+                        type_ = (source[start] == 'd') ? TokenType::Double : TokenType::Float;
+                        start++;
+                    } else {
+                        errSession.addError(
+                            "Decimal number needs a type specification after declaration ( f = float, d = double )",
+                            file,
+                            line,
+                            pos + start
+                        );
+                    }
+                }
+
+                tokens.push_back(Token {{line, pos, file}, type_, source.substr(0, start)});
                 source.erase(0, start);
-                pos += start - 1;
+                pos += start;
                 continue;
             }
 

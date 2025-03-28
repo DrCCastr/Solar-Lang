@@ -32,10 +32,9 @@ string readFile(const string& path) {
 
 int main()
 {
-    Solar::Parser parser;
+    Compiler compiler;
 
-    auto result = parser.parseCode(readFile("../test/script.sun"), "script.sun");
-    cout << result->debug() << endl;
+    compiler.compileCode(readFile("../test/script.sun"));
 
     return 0;
 }

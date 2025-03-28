@@ -18,4 +18,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIR})
 
 find_package(LLVM CONFIG REQUIRED)
 include_directories(${LLVM_INCLUDE_DIRS})
-target_link_libraries(${TARGET} PRIVATE LLVMCore LLVMExecutionEngine)
+target_link_libraries(${TARGET} PRIVATE LLVMCore)

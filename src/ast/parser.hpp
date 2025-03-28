@@ -8,7 +8,9 @@
 // Includes //
 //////////////
 
-#include "solar_pack.hpp"
+#include "lexer/pack.hpp"
+#include "pack.hpp"
+#include "error.hpp"
 #include <vector>
 #include <functional>
 #include <unordered_map>
@@ -26,31 +28,35 @@ namespace Solar {
     private:
         ErrorSesion errSession;
         vector<Token> tokens;
-        unordered_map<string, Type> userTypes;
 
         // Helpers //
         Token next();
         Token actual();
-        Token peek(); // Next token without eating
+        Token opcional(TokenType expected);
         Token expect(TokenType expeted);
-        Type parseType();
+        Type parseType(AstEnv& env);
         bool notEOF();
 
         // Statments //
-        StmtPtr parseStmt();
-        StmtPtr parseFuncStmt(string name = "");
+        StmtPtr parseStmt(AstEnv& env);
+        StmtPtr parseFuncStmt(string name, AstEnv& env);
+        StmtPtr parseReturnStmt(AstEnv& env);
+        StmtPtr parseVarDecStmt(AstEnv& env);
 
         // Expressions //
         template <typename Expr>
-        ExprPtr parseOperatorExpr(std::function<ExprPtr()> subExpr, const vector<string>& ops, bool typeCheck = false);
-        ExprPtr parseExpr();
-        ExprPtr parseAssignExpr();
-        ExprPtr parseLogicalExpr();
-        ExprPtr parseComparasonExpr();
-        ExprPtr parseAdditiveExpr();
-        ExprPtr parseMultiplicativeExpr();
+        ExprPtr parseOperatorExpr(std::function<ExprPtr()> subExpr, const vector<string>& ops, bool typeCheck, AstEnv& env);
+        ExprPtr parseExpr(AstEnv& env);
+        ExprPtr parseAssignExpr(AstEnv& env);
+        ExprPtr parseLogicalExpr(AstEnv& env);
+        ExprPtr parseComparasonExpr(AstEnv& env);
+        ExprPtr parseAdditiveExpr(AstEnv& env);
+        ExprPtr parseMultiplicativeExpr(AstEnv& env);
+        ExprPtr parseExponentialExpr(AstEnv& env);
+        ExprPtr parseUnaryExpr(AstEnv& env);
+        ExprPtr parseCallExpr(AstEnv& env);
 
-        ExprPtr parsePrimaryExpr();
+        ExprPtr parsePrimaryExpr(AstEnv& env);
     public:
         // Intializers //
         shared_ptr<BlockStmt> parseCode(string source, string file = "Unknow");

@@ -1,3 +1,9 @@
+func idk(a: int, b: int): int {
+   return a + b;
+}
+
 func main(): int {
-    return 0
+   var x: int = idk(1, 2);
+
+   return x;
 }

@@ -8,7 +8,7 @@
 // Includes //
 //////////////
 
-#include "solar_pack.hpp"
+#include "lexer/pack.hpp"
 #include <string>
 #include <memory>
 #include <vector>
@@ -26,15 +26,18 @@ namespace Solar {
         BlockStmt,
         FuncStmt,
         ReturnStmt,
+        VarDecStmt,
 
         NullExpr,
         BoolExpr,
         FloatExpr,
+        DoubleExpr,
         IntExpr,
         CharExpr,
-        StringExpr,
         IdentExpr,
 
+        CallExpr,
+        UnaryExpr,
         AssignmentExpr,
         BinaryExpr,
         LogicalExpr,
@@ -91,10 +94,10 @@ namespace Solar {
     public:
         string identifier;
         vector<StmtPtr> body;
-        vector<pair<string, Type>> args;
+        unordered_map<string, Type> args;
         Type returnType;
 
-        FuncStmt(TokenPos pos, string identifier, vector<StmtPtr> body, Type returnType) : identifier(identifier), body(body), returnType(returnType) {
+        FuncStmt(TokenPos pos, string identifier, vector<StmtPtr> body, unordered_map<string, Type> args, Type returnType) : identifier(identifier), body(body), args(args), returnType(returnType) {
             this->pos = pos;
         }
 
@@ -140,6 +143,27 @@ namespace Solar {
         NodeType getKind() const override { return NodeType::ReturnStmt; }
     };
 
+    class VarDecStmt : public Stmt {
+    public:
+        string identifier;
+        ExprPtr value;
+
+        VarDecStmt(TokenPos pos, string identifier, ExprPtr value) : identifier(identifier), value(value) {
+            this->pos = pos;
+        }
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "VarDecStmt: {\n";
+            result += string((indent + 1) * 2, ' ') + "Identifier: " + this->identifier + "\n";
+            result += string((indent + 1) * 2, ' ') + "Value: " + this->value->debug() + "\n";
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::VarDecStmt; }
+    };
+
     // ------------|
     // Expressions |
     // ------------|
@@ -176,9 +200,9 @@ namespace Solar {
 
     class FloatExpr : public Expr {
     public:
-        double value;
+        float value;
 
-        FloatExpr(TokenPos pos, double value) 
+        FloatExpr(TokenPos pos, float value) 
             : Expr(Type(TypeEnum::Float)), value(value) {
             this->pos = pos;
         }
@@ -188,6 +212,22 @@ namespace Solar {
         }
 
         NodeType getKind() const override { return NodeType::FloatExpr; }
+    };
+
+    class DoubleExpr : public Expr {
+    public:
+        double value;
+
+        DoubleExpr(TokenPos pos, double value) 
+            : Expr(Type(TypeEnum::Double)), value(value) {
+            this->pos = pos;
+        }
+
+        string debug(int indent = 0) const override {
+            return string(indent * 2, ' ') + "DoubleExpr: " + to_string(this->value) + "\n";
+        }
+
+        NodeType getKind() const override { return NodeType::DoubleExpr; }
     };
 
     class IntExpr : public Expr {
@@ -222,28 +262,12 @@ namespace Solar {
         NodeType getKind() const override { return NodeType::CharExpr; }
     };
 
-    class StringExpr : public Expr {
-    public:
-        string value;
-
-        StringExpr(TokenPos pos, string value) 
-            : Expr(Type(TypeEnum::String)), value(value) {
-            this->pos = pos;
-        }
-
-        string debug(int indent = 0) const override {
-            return string(indent * 2, ' ') + "StringExpr: \"" + this->value + "\"\n";
-        }
-
-        NodeType getKind() const override { return NodeType::StringExpr; }
-    };
-
     class IdentExpr : public Expr {
     public:
         string value;
 
-        IdentExpr(TokenPos pos, string value) 
-            : Expr(Type(TypeEnum::Auto)), value(value) {
+        IdentExpr(TokenPos pos, Type type, string value)
+            : Expr(type), value(value) {
             this->pos = pos;
         }
 
@@ -255,6 +279,28 @@ namespace Solar {
     };
 
     // Complex expresisons //
+    class UnaryExpr : public Expr {
+    public:
+        string op;
+        ExprPtr value;
+
+        UnaryExpr(TokenPos pos, string op, ExprPtr value)
+        : Expr(value->type_), op(op), value(value) {
+            this->pos = pos;
+        }
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "UnaryExpr: {\n";
+            result += string((indent + 1) * 2, ' ') + "Operator: " + this->op + "\n";
+            result += string((indent + 1) * 2, ' ') + "Value: " + this->value->debug() + "\n";
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::UnaryExpr; }
+    };
+
     class AssignmentExpr : public Expr {
     public:
         string identifier;
@@ -347,6 +393,33 @@ namespace Solar {
         }
 
         NodeType getKind() const override { return NodeType::ComparasonExpr; }
+    };
+
+    class CallExpr : public Expr {
+    public:
+        ExprPtr left;
+        vector<ExprPtr> args;
+        bool isExpr;
+
+        CallExpr(TokenPos pos, Type type, ExprPtr left, vector<ExprPtr> args, bool isExpr = false)
+            : Expr(type), left(left), args(args), isExpr(isExpr) {
+                this->pos = pos;
+            }
+
+        string debug(int indent = 0) const override {
+            string result;
+            result += string(indent * 2, ' ') + "CallExpr: {\n";
+            result += this->left->debug(indent + 1);
+            result += string((indent + 1) * 2, ' ') + "Args: {\n";
+            for (const auto& arg : this->args) {
+                result += arg->debug(indent + 2);
+            }
+            result += string((indent + 1) * 2, ' ') + "}\n";
+            result += string(indent * 2, ' ') + "}\n";
+            return result;
+        }
+
+        NodeType getKind() const override { return NodeType::CallExpr; }
     };
 
 }

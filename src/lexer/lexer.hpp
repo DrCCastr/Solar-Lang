@@ -8,9 +8,11 @@
 // Includes //
 //////////////
 
+#include "pack.hpp"
+#include "error.hpp"
+#include <string>
 #include <cstddef>
 #include <stdexcept>
-#include "solar_pack.hpp"
 
 using namespace std;
 

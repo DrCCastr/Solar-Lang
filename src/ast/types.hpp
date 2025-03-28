@@ -8,7 +8,7 @@
 // Includes //
 //////////////
 
-#include "solar_pack.hpp"
+#include "lexer/pack.hpp"
 #include <unordered_map>
 
 using namespace std;
@@ -27,11 +27,12 @@ namespace Solar {
         Bool,
         Int,
         Float,
+        Double,
         Char,
-        String,
+        Function,
+
         UserType,
         Struct,
-
         Class,
         Namespace,
     };
@@ -41,16 +42,20 @@ namespace Solar {
         {"bool", TypeEnum::Bool},
         {"int", TypeEnum::Int},
         {"float", TypeEnum::Float},
+        {"double", TypeEnum::Double},
         {"char", TypeEnum::Char},
-        {"string", TypeEnum::String},
+        {"func", TypeEnum::Function},
     };
 
     struct Type {
         TypeEnum kind;
         string extra; // User-Type name
         string family; // "Int & Float = Number" and etc
+        bool isPointer;
         vector<string> parents;
         bool primaryType;
+        vector<Type> generics;
+        vector<vector<Type>> unsizedGenerics;
 
         bool compare(Type other) const {
             if (other.kind != this->kind) return false;
@@ -87,10 +92,11 @@ namespace Solar {
                 case TypeEnum::Char: typeName = "Char"; break;
                 case TypeEnum::Class: typeName = "Class"; break;
                 case TypeEnum::Float: typeName = "Float"; break;
+                case TypeEnum::Double: typeName = "Double"; break;
                 case TypeEnum::Int: typeName = "Int"; break;
+                case TypeEnum::Function: typeName = "Function"; break;
                 case TypeEnum::Namespace: typeName = "Namespace"; break;
                 case TypeEnum::Null: typeName = "Null"; break;
-                case TypeEnum::String: typeName = "String"; break;
                 case TypeEnum::Struct: typeName = "Struct"; break;
                 case TypeEnum::Unknow: typeName = "Unknow"; break;
                 case TypeEnum::UserType: typeName = "UserType"; break;
@@ -99,14 +105,16 @@ namespace Solar {
             return typeName + (this->extra != "" ? "(" + this->extra + ")" : "");
         }
 
-        Type(TypeEnum kind = TypeEnum::Unknow, string extra = "") : kind(kind), extra(extra), primaryType(true) {
+        Type(TypeEnum kind = TypeEnum::Unknow, bool pointer = false, string extra = "", vector<Type> generics = {}, vector<vector<Type>> unsizedGenerics = {})
+        : kind(kind), extra(extra), isPointer(pointer), primaryType(true), generics(generics), unsizedGenerics(unsizedGenerics) {
             switch (kind) {
                 case TypeEnum::Null: this->family = "Void"; break;
                 case TypeEnum::Bool: this->family = "Bool"; break;
                 case TypeEnum::Int: this->family = "Number"; break;
+                case TypeEnum::Double: this->family = "Double"; break;
                 case TypeEnum::Float: this->family = "Number"; break;
                 case TypeEnum::Char: this->family = "Alfa"; break;
-                case TypeEnum::String: this->family = "Alfa"; break;
+                case TypeEnum::Function: this->family = "Function"; break;
 
                 case TypeEnum::Auto: // Same unknow
                 case TypeEnum::Unknow: this->family = "None"; break;
@@ -119,5 +127,9 @@ namespace Solar {
             }
         };
     };
+
+    inline bool operator==(const Type& a, const Type& b) {
+        return a.compare(b);
+    }
 
 }
